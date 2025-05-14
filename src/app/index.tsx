@@ -1,11 +1,14 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { Link, Stack } from 'expo-router';
+import { StyleSheet, View } from 'react-native';
+import CustomButton from '../components/CustomButton';
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <Stack.Screen options={{title: 'Home'}}/>
+      <Link href={'/checkout'} asChild>
+        <CustomButton title='Checkout'/>
+      </Link>
     </View>
   );
 }
