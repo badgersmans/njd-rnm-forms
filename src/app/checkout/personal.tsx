@@ -5,32 +5,7 @@ import CustomTextInput from '../../components/CustomTextInput'
 import KeyboardAwareScrollView from '../../components/KeyboardAwareScrollView'
 import { useForm, SubmitHandler, FormProvider } from "react-hook-form"
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-
-const PersonalInfoSchema = z.object({
-  fullName: z
-    .string({ message: 'Full name is required!' })
-    .min(1, { message: 'Full name must be longer than 1' })
-    .trim(),
-
-  address: z.string()
-    .min(1, { message: 'Please provide your address!' })
-    .max(60, { message: 'Your address is too long!' }),
-
-  city: z.string()
-    .min(1, { message: 'City is required!' })
-    .max(60, { message: 'City is too long!' }),
-
-  postcode: z.string()
-    .min(1, { message: 'Postal code is required!' })
-    .max(20, { message: 'Postal code is too long!' }),
-
-  phone: z.string({ message: 'Phone is required!' })
-    .min(10, { message: 'Number is required!' })
-    .max(11, { message: 'Number is too long!' }),
-});
-
-type PersonalInfo = z.infer<typeof PersonalInfoSchema>
+import { PersonalInfo, PersonalInfoSchema } from '../../context/CheckoutFormProvider'
 
 export default function PersonalDetailsForm() {
   const form = useForm<PersonalInfo>({
