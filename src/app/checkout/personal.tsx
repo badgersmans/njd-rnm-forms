@@ -3,19 +3,17 @@ import CustomButton from '../../components/CustomButton'
 import { router } from 'expo-router'
 import CustomTextInput from '../../components/CustomTextInput'
 import KeyboardAwareScrollView from '../../components/KeyboardAwareScrollView'
-import { useForm, SubmitHandler, Controller } from "react-hook-form"
+import { useForm, SubmitHandler, FormProvider } from "react-hook-form"
 
 export default function PersonalDetailsForm() {
-  const {
-    handleSubmit, 
-    formState: {errors},
-    control,
-  } = useForm()
+  const form = useForm()
+  const {formState: { errors }, handleSubmit} = form
 
   console.log(errors)
 
-  const onNext = () => {
+  const onNext: SubmitHandler<any> = (data) => {
     // validate the form
+    console.log(data)
 
     // redirect next
     router.push('/checkout/payment')
@@ -23,37 +21,31 @@ export default function PersonalDetailsForm() {
 
   return (
     <KeyboardAwareScrollView>
+      <FormProvider {...form}>
 
-      <Controller 
-        control={control}
-        name='fullName'
-        rules={{required: 'Name is required'}}
-        render={({field: {value, onChange, onBlur}}) => (
-          <CustomTextInput 
-            value={value} 
-            onChangeText={onChange} 
-            onBlur={onBlur} 
-            label="Full name" 
-            placeholder='Tuk Kun'
-          />
-        )}
-      />
+        <CustomTextInput 
+          name='fullName'
+          label="Full name" 
+          placeholder='Tuk Kun'
+        />
 
-      <CustomTextInput 
-        label="Address" 
-        placeholder='Bangkok'
-        multiline={true}
-        style={{minHeight: 80}}
-      />
+        <CustomTextInput
+          name='address'
+          label="Address" 
+          placeholder='Bangkok'
+          multiline={true}
+          style={{minHeight: 80}}
+        />
 
-      <View style={{flexDirection: 'row', gap: 20}}>
-        <CustomTextInput label="City" placeholder='City' containerStyle={{flex: 1}} />
-        <CustomTextInput label="Postcode" placeholder='1234' containerStyle={{flex: 1}}/>
-      </View>
+        <View style={{flexDirection: 'row', gap: 20}}>
+          <CustomTextInput name='city' label="City" placeholder='City' containerStyle={{flex: 1}} />
+          <CustomTextInput name='postcode' label="Postcode" placeholder='1234' containerStyle={{flex: 1}}/>
+        </View>
 
-      <CustomTextInput label="Phone number" placeholder='12345678' inputMode='tel'/>
+        <CustomTextInput name='phone' label="Phone number" placeholder='12345678' inputMode='tel'/>
 
-      <CustomButton title='Next' onPress={handleSubmit(onNext)} style={styles.button}/>
+        <CustomButton title='Next' onPress={handleSubmit(onNext)} style={styles.button}/>
+      </FormProvider>
     </KeyboardAwareScrollView>
   )
 }
