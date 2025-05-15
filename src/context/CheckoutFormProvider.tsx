@@ -17,7 +17,7 @@ export const PersonalInfoSchema = z.object({
 
   postcode: z.string()
     .min(1, { message: 'Postal code is required!' })
-    .max(20, { message: 'Postal code is too long!' }),
+    .max(16, { message: 'Postal code is too long!' }),
 
   phone: z.string({ message: 'Phone is required!' })
     .min(10, { message: 'Number is required!' })
@@ -34,23 +34,41 @@ export const PaymentInfoSchema = z.object({
     .string({ message: 'Expiry date is required' })
     .regex(/^(0[1-9]|1[0-2])\/?([0-9]{2})$/, "Please write as MMYY format"),
    
-    cvv: z
-      .coerce
-      .number({message: 'CVV is required'})
-      .min(100, { message: 'CVV is required' })
-      .max(999, { message: 'Invalid CVV' })
+  cvv: z
+    .coerce
+    .number({message: 'CVV is required'})
+    .min(100, { message: 'CVV is required' })
+    .max(999, { message: 'Invalid CVV' })
 });
 
 export type PersonalInfo = z.infer<typeof PersonalInfoSchema>
 export type PaymentInfo = z.infer<typeof PaymentInfoSchema>
 
-type CheckoutFormContext = {};
+type CheckoutFormContext = {
+  personalInfo: PersonalInfo | undefined, 
+  setPersonalInfo: (val: PersonalInfo | undefined) => void,
+  paymentInfo: PaymentInfo | undefined, 
+  setPaymentInfo: (val: PaymentInfo | undefined) => void
+};
 
-const CheckoutFormContext = createContext<CheckoutFormContext>({});
+const CheckoutFormContext = createContext<CheckoutFormContext>({
+  personalInfo: undefined,
+  setPersonalInfo: () => {},
+  paymentInfo: undefined,
+  setPaymentInfo: () => {}
+});
 
 export default function CheckoutFormProvider({ children }: PropsWithChildren) {
+  const [personalInfo, setPersonalInfo] = useState<PersonalInfo | undefined>()
+  const [paymentInfo, setPaymentInfo] = useState<PaymentInfo | undefined>()
+
 	return (
-    <CheckoutFormContext.Provider value={{}}>
+    <CheckoutFormContext.Provider value={{
+      personalInfo, 
+      setPersonalInfo,
+      paymentInfo, 
+      setPaymentInfo
+    }}>
       {children}
     </CheckoutFormContext.Provider>
   );

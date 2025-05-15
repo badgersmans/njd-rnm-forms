@@ -42,11 +42,27 @@ export default function PersonalDetailsForm() {
         />
 
         <View style={{flexDirection: 'row', gap: 20}}>
-          <CustomTextInput name='city' label="City" placeholder='City' containerStyle={{flex: 1}} />
-          <CustomTextInput name='postcode' label="Postcode" placeholder='1234' containerStyle={{flex: 1}}/>
+          <CustomTextInput 
+            name='city'
+            label="City"
+            placeholder='City'
+            containerStyle={{flex: 1}}
+          />
+          <CustomTextInput 
+            name='postcode'
+            label="Postcode"
+            placeholder='1234'
+            inputMode='numeric'
+            containerStyle={{flex: 1}}
+          />
         </View>
 
-        <CustomTextInput name='phone' label="Phone number" placeholder='12345678' inputMode='tel'/>
+        <CustomTextInput 
+          name='phone' 
+          label="Phone number" 
+          placeholder='0192345678' 
+          inputMode='numeric'
+        />
 
         <CustomButton title='Next' onPress={handleSubmit(onNext)} style={styles.button}/>
       </FormProvider>
