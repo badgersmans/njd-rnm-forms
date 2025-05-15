@@ -1,12 +1,18 @@
 import { View, StyleSheet } from 'react-native'
 import CustomButton from '../../components/CustomButton'
 import { router } from 'expo-router'
-import { useState } from 'react'
 import CustomTextInput from '../../components/CustomTextInput'
 import KeyboardAwareScrollView from '../../components/KeyboardAwareScrollView'
+import { useForm, SubmitHandler, Controller } from "react-hook-form"
 
 export default function PersonalDetailsForm() {
-  const [fullname, setFullname] = useState('')
+  const {
+    handleSubmit, 
+    formState: {errors},
+    control,
+  } = useForm()
+
+  console.log(errors)
 
   const onNext = () => {
     // validate the form
@@ -17,7 +23,22 @@ export default function PersonalDetailsForm() {
 
   return (
     <KeyboardAwareScrollView>
-      <CustomTextInput label="Full name" placeholder='Tuk Kun'/>
+
+      <Controller 
+        control={control}
+        name='fullName'
+        rules={{required: 'Name is required'}}
+        render={({field: {value, onChange, onBlur}}) => (
+          <CustomTextInput 
+            value={value} 
+            onChangeText={onChange} 
+            onBlur={onBlur} 
+            label="Full name" 
+            placeholder='Tuk Kun'
+          />
+        )}
+      />
+
       <CustomTextInput 
         label="Address" 
         placeholder='Bangkok'
@@ -32,7 +53,7 @@ export default function PersonalDetailsForm() {
 
       <CustomTextInput label="Phone number" placeholder='12345678' inputMode='tel'/>
 
-      <CustomButton title='Next' onPress={onNext} style={styles.button}/>
+      <CustomButton title='Next' onPress={handleSubmit(onNext)} style={styles.button}/>
     </KeyboardAwareScrollView>
   )
 }
