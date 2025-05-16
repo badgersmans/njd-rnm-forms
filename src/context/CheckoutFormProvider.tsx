@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { createContext, PropsWithChildren, useContext, useState } from 'react';
 import * as z from 'zod';
 
@@ -9,11 +10,13 @@ export const PersonalInfoSchema = z.object({
 
   address: z.string()
     .min(1, { message: 'Please provide your address!' })
-    .max(60, { message: 'Your address is too long!' }),
+    .max(60, { message: 'Your address is too long!' })
+    .trim(),
 
   city: z.string()
     .min(1, { message: 'City is required!' })
-    .max(60, { message: 'City is too long!' }),
+    .max(60, { message: 'City is too long!' })
+    .trim(),
 
   postcode: z.string()
     .min(1, { message: 'Postal code is required!' })
@@ -48,26 +51,42 @@ type CheckoutFormContext = {
   personalInfo: PersonalInfo | undefined, 
   setPersonalInfo: (val: PersonalInfo | undefined) => void,
   paymentInfo: PaymentInfo | undefined, 
-  setPaymentInfo: (val: PaymentInfo | undefined) => void
+  setPaymentInfo: (val: PaymentInfo | undefined) => void,
+  onSubmit: () => void
 };
 
 const CheckoutFormContext = createContext<CheckoutFormContext>({
   personalInfo: undefined,
   setPersonalInfo: () => {},
   paymentInfo: undefined,
-  setPaymentInfo: () => {}
+  setPaymentInfo: () => {},
+  onSubmit: () => {}
 });
 
 export default function CheckoutFormProvider({ children }: PropsWithChildren) {
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo | undefined>()
   const [paymentInfo, setPaymentInfo] = useState<PaymentInfo | undefined>()
 
+  const onSubmit = () => {
+    // send to server
+    if(!personalInfo || !paymentInfo) {
+      return
+    }
+
+    setPersonalInfo(undefined)
+    setPaymentInfo(undefined)
+
+    router.dismissAll()
+    router.back()
+  }
+
 	return (
     <CheckoutFormContext.Provider value={{
       personalInfo, 
       setPersonalInfo,
       paymentInfo, 
-      setPaymentInfo
+      setPaymentInfo,
+      onSubmit
     }}>
       {children}
     </CheckoutFormContext.Provider>

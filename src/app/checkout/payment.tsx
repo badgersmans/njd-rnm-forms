@@ -5,16 +5,22 @@ import KeyboardAwareScrollView from '../../components/KeyboardAwareScrollView'
 import { useForm, SubmitHandler, FormProvider } from "react-hook-form"
 import { zodResolver } from '@hookform/resolvers/zod';
 import CustomTextInput from '../../components/CustomTextInput'
-import { PaymentInfo, PaymentInfoSchema } from '../../context/CheckoutFormProvider'
+import { PaymentInfo, PaymentInfoSchema, useCheckoutForm } from '../../context/CheckoutFormProvider'
 
 export default function PaymentDetailsForm() {
+    const {setPaymentInfo, paymentInfo} = useCheckoutForm()
+
     const form = useForm<PaymentInfo>({
-      resolver: zodResolver(PaymentInfoSchema)
+      resolver: zodResolver(PaymentInfoSchema),
+      defaultValues: paymentInfo
     })
+
     const {formState: { errors }, handleSubmit} = form
 
-  const onNext: SubmitHandler<PaymentInfo> = () => {
-    // validate the form
+  const onNext: SubmitHandler<PaymentInfo> = (data) => {
+    // the data is already valid
+    setPaymentInfo(data)
+    console.log(data)
 
     // redirect next
     router.push('/checkout/confirm')

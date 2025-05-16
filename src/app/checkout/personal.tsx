@@ -5,18 +5,23 @@ import CustomTextInput from '../../components/CustomTextInput'
 import KeyboardAwareScrollView from '../../components/KeyboardAwareScrollView'
 import { useForm, SubmitHandler, FormProvider } from "react-hook-form"
 import { zodResolver } from '@hookform/resolvers/zod';
-import { PersonalInfo, PersonalInfoSchema } from '../../context/CheckoutFormProvider'
+import { PersonalInfo, PersonalInfoSchema, useCheckoutForm } from '../../context/CheckoutFormProvider'
 
 export default function PersonalDetailsForm() {
+  const {setPersonalInfo, personalInfo} = useCheckoutForm()
+
   const form = useForm<PersonalInfo>({
-    resolver: zodResolver(PersonalInfoSchema)
+    resolver: zodResolver(PersonalInfoSchema),
+    defaultValues: personalInfo
   })
+
   const {formState: { errors }, handleSubmit} = form
 
   // console.log(errors)
 
   const onNext: SubmitHandler<PersonalInfo> = (data) => {
-    // validate the form
+    // the data is already valid
+    setPersonalInfo(data)
     console.log(data)
 
     // redirect next
